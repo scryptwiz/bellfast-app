@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "bellfast-app",
+    "name": "Bellfast App",
     "slug": "bellfast-app",
     "version": "1.0.0",
-
     "scheme": "bellfast-app",
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icons/splash-icon-dark.png"
     },
     "plugins": [
       "expo-router",
@@ -17,32 +16,51 @@
         {
           "launchMode": "most-recent"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
-
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-
-    "userInterfaceStyle": "light",
-
+    "icon": "./assets/icons/splash-icon-dark.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icons/splash-icon-dark.png",
+      "imageWidth": 300,
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kelvide.bellfastapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "icon": {
+        "dark": "./assets/icons/ios-dark.png",
+        "light": "./assets/icons/ios-light.png",
+        "tinted": "./assets/icons/ios-tinted.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "monochromeImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.kelvide.bellfastapp"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "69953f02-0b52-4bc1-9dbf-b41cf64755f5"
       }
     }
   }
