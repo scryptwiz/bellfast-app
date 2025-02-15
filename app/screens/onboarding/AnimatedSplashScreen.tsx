@@ -19,7 +19,7 @@ const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: Anim
 					minHeight: 300,
 					backgroundColor: 'transparent',
 				}}
-				source={require('../assets/lotties/bellfast-lottie.json')}
+				source={require('~assets/lotties/bellfast-lottie.json')}
 			/>
 		</View>
 	);
