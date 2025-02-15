@@ -25,7 +25,7 @@
     },
     "orientation": "portrait",
     "icon": "./assets/icons/splash-icon-dark.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/icons/splash-icon-dark.png",
       "imageWidth": 300,

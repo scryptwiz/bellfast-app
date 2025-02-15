@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 interface AnimatedSplashScreenProps {
@@ -9,6 +9,7 @@ const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: Anim
 
 	return (
 		<View className='bg-white flex-1 items-center justify-center'>
+			<StatusBar barStyle="dark-content" />
 			<LottieView
 				autoPlay
 				onAnimationFinish={onAnimationFinish}

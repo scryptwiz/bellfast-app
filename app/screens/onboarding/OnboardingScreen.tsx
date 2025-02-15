@@ -1,4 +1,4 @@
-import { FlatList, Image, SafeAreaView, Text, useWindowDimensions, View } from "react-native";
+import { FlatList, Image, SafeAreaView, StatusBar, Text, useWindowDimensions, View } from "react-native";
 import { data, OnboardingDataProps } from "~/constants/OnboardingData";
 import Animated, { useSharedValue, useAnimatedScrollHandler, useAnimatedStyle, interpolate, Extrapolation, useAnimatedRef } from "react-native-reanimated";
 import OnboardingPaginationComp from "~/components/onboarding/PaginationComp";
@@ -92,6 +92,7 @@ const OnboardingScreen = () => {
 
 	return (
 		<SafeAreaView className="bg-white flex-1">
+			<StatusBar barStyle="dark-content" />
 			<Animated.FlatList
 				ref={flatListRef as React.RefObject<FlatList<any>>}
 				onScroll={onScroll}
@@ -104,7 +105,6 @@ const OnboardingScreen = () => {
 				bounces={false}
 				pagingEnabled={true}
 				showsHorizontalScrollIndicator={false}
-			// className="bg-green-200"
 			/>
 			<View className="flex justify-between items-center flex-row pb-5 px-10">
 				<OnboardingPaginationComp data={data} x={x} screenWidth={SCREEN_WIDTH} />
