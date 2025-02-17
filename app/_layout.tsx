@@ -18,7 +18,7 @@ export default function Layout () {
 
   useEffect(() => {
     const checkFirstLaunch = async () => {
-      await AsyncStorage.removeItem('hasEverSignedIn');
+      // await AsyncStorage.removeItem('hasEverSignedIn');
       const hasSignedIn = await AsyncStorage.getItem('hasEverSignedIn');
       if (hasSignedIn === null) {
         await AsyncStorage.setItem('hasEverSignedIn', 'true');

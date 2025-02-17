@@ -67,7 +67,7 @@ const SignIn = () => {
 									<TextInput
 										secureTextEntry={secureTextEntry}
 										className="flex-1 text-lg p-4"
-										placeholder="12345678"
+										placeholder="....."
 										value={password}
 										onChangeText={setPassword}
 									/>
