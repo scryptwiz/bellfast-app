@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const SignIn = () => {
@@ -32,6 +33,14 @@ const SignIn = () => {
 						<Image source={require("~assets/icons/google.png")} style={{ width: 20, height: 20 }} />
 						<Text className="text-p1 text-center text-lg font-bold">Sign In with Google</Text>
 					</TouchableOpacity>
+					<View className="mt-5 flex flex-row items-center gap-1">
+						<Text className="text-s2 ml-2">Don't Have an Account?</Text>
+						<TouchableOpacity className="flex w-fit items-center">
+							<Link href={{ pathname: "/screens/auth/Signup" }} className="my-auto">
+								<Text className="text-p1 font-bold text-lg"> Sign Up</Text>
+							</Link>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 		</SafeAreaView>
