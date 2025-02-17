@@ -58,7 +58,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({ flatListRef, flatListIndex,
 				if (flatListIndex.value < dataLength - 1) {
 					flatListRef.current.scrollToIndex({ index: flatListIndex.value + 1 });
 				} else {
-					router.push('/');
+					router.push('/screens/auth/Signin');
 				}
 			}}>
 			<Animated.View className="bg-p1 p-2 rounded-full items-center justify-center" style={[buttonAnimationStyle]}>

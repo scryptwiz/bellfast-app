@@ -1,16 +1,22 @@
 import { StatusBar, View } from 'react-native';
 import LottieView from 'lottie-react-native';
+import Animated, { BounceOutLeft, FadeIn, ZoomIn } from 'react-native-reanimated';
 
 interface AnimatedSplashScreenProps {
 	onAnimationFinish?: (isCancelled: boolean) => void;
 }
 
-const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: AnimatedSplashScreenProps) => {
+const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
+const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: AnimatedSplashScreenProps) => {
 	return (
-		<View className='bg-white flex-1 items-center justify-center'>
+		<Animated.View
+			entering={FadeIn.duration(1000)}
+			exiting={BounceOutLeft.duration(1000)}
+			className='bg-white flex-1 items-center justify-center'
+		>
 			<StatusBar barStyle="dark-content" />
-			<LottieView
+			<AnimatedLottieView
 				autoPlay
 				onAnimationFinish={onAnimationFinish}
 				loop={false}
@@ -22,7 +28,7 @@ const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: Anim
 				}}
 				source={require('~assets/lotties/bellfast-lottie.json')}
 			/>
-		</View>
+		</Animated.View>
 	);
 }
 

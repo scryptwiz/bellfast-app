@@ -2,7 +2,7 @@ import { SafeAreaView, StatusBar } from 'react-native';
 
 export const Container = ({ children }: { children: React.ReactNode }) => {
   return <SafeAreaView className={styles.container}>
-    <StatusBar barStyle="dark-content" />
+    <StatusBar backgroundColor="#fff" barStyle="dark-content" />
     {children}
   </SafeAreaView>;
 };

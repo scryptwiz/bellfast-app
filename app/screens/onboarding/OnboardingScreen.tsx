@@ -92,7 +92,7 @@ const OnboardingScreen = () => {
 
 	return (
 		<SafeAreaView className="bg-white flex-1">
-			<StatusBar barStyle="dark-content" />
+			<StatusBar backgroundColor="#fff" barStyle="dark-content" />
 			<Animated.FlatList
 				ref={flatListRef as React.RefObject<FlatList<any>>}
 				onScroll={onScroll}
