@@ -10,7 +10,7 @@ export default function Layout () {
   const router = useRouter();
   const [appReady, setAppReady] = useState(false);
   const [splashAnimationFinished, setSplashAnimationFinished] = useState(false);
-  const [hasEvereSignedIn, setHasEverSignedIn] = useState<boolean | null>(null);
+  const [hasNeevereSignedIn, setHasEverSignedIn] = useState<boolean | null>(null);
 
   const [fontsLoaded] = useFonts({
     'SpaceMono': require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -21,6 +21,7 @@ export default function Layout () {
       await AsyncStorage.removeItem('hasEverSignedIn');
       const hasSignedIn = await AsyncStorage.getItem('hasEverSignedIn');
       if (hasSignedIn === null) {
+        await AsyncStorage.setItem('hasEverSignedIn', 'true');
         setHasEverSignedIn(true);
       } else {
         setHasEverSignedIn(false);
@@ -37,12 +38,12 @@ export default function Layout () {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    if (appReady && splashAnimationFinished && hasEvereSignedIn !== null) {
-      if (hasEvereSignedIn) {
+    if (appReady && splashAnimationFinished && hasNeevereSignedIn !== null) {
+      if (hasNeevereSignedIn) {
         router.push('/screens/onboarding/OnboardingScreen');
       }
     }
-  }, [appReady, splashAnimationFinished, hasEvereSignedIn]);
+  }, [appReady, splashAnimationFinished, hasNeevereSignedIn]);
 
   if (!appReady || !splashAnimationFinished) {
     return (

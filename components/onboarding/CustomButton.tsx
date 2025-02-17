@@ -61,7 +61,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({ flatListRef, flatListIndex,
 					router.push('/screens/auth/Signin');
 				}
 			}}>
-			<Animated.View className="bg-p1 p-2 rounded-full items-center justify-center" style={[buttonAnimationStyle]}>
+			<Animated.View className="bg-p2 p-2 rounded-full items-center justify-center" style={[buttonAnimationStyle]}>
 				<Animated.Text className="text-white text-base font-bold absolute" style={[textAnimationStyle]}>Get Started</Animated.Text>
 				<Animated.View style={[arrowAnimationStyle]} className="absolute text-center">
 					<AntDesign name="arrowright" size={24} color="white" className='text-center my-auto' />

@@ -24,7 +24,7 @@ const OnboardingPaginationComp = ({ data, x, screenWidth }: { data: OnboardingDa
 		});
 
 		return (
-			<Animated.View className="w-3 h-3 rounded-full bg-p1 mx-1" style={animatedDotStyle} />
+			<Animated.View className="w-3 h-3 rounded-full bg-p2 mx-1" style={animatedDotStyle} />
 		)
 	};
 

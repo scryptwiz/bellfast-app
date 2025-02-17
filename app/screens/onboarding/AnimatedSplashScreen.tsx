@@ -1,12 +1,10 @@
-import { StatusBar, View } from 'react-native';
+import { StatusBar } from 'react-native';
 import LottieView from 'lottie-react-native';
-import Animated, { BounceOutLeft, FadeIn, ZoomIn } from 'react-native-reanimated';
+import Animated, { BounceOutLeft, FadeIn } from 'react-native-reanimated';
 
 interface AnimatedSplashScreenProps {
 	onAnimationFinish?: (isCancelled: boolean) => void;
 }
-
-const AnimatedLottieView = Animated.createAnimatedComponent(LottieView);
 
 const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: AnimatedSplashScreenProps) => {
 	return (
@@ -16,7 +14,7 @@ const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: Anim
 			className='bg-white flex-1 items-center justify-center'
 		>
 			<StatusBar barStyle="dark-content" />
-			<AnimatedLottieView
+			<LottieView
 				autoPlay
 				onAnimationFinish={onAnimationFinish}
 				loop={false}
