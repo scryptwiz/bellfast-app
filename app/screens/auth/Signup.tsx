@@ -2,10 +2,9 @@ import { Link } from "expo-router";
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from "react";
 import Checkbox from 'expo-checkbox';
-import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Alert, ScrollView, Modal, StyleSheet } from "react-native";
+import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Alert, ScrollView, Modal } from "react-native";
 import { formatDate } from "~/utils/Date.utils";
 import CustomDatePicker from "~/components/CustomDatePicker";
-import { BlurView } from "expo-blur";
 
 const SignUp = () => {
 	const today = new Date();
@@ -67,12 +66,7 @@ const SignUp = () => {
 
 	return (
 		<SafeAreaView className="flex-1 bg-p2">
-			{/* Blurred StatusBar */}
-			<View style={styles.statusBarContainer}>
-				<BlurView intensity={100} tint="dark" style={styles.blurView}>
-					<StatusBar backgroundColor="transparent" translucent barStyle="light-content" />
-				</BlurView>
-			</View>
+			<StatusBar backgroundColor="#513DB0" barStyle="light-content" />
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<View className="h-fit bg-p2 flex justify-center items-center">
 					<Image source={require("~assets/icons/splash-icon-light.png")} style={{ width: 200, height: 200 }} />
@@ -181,21 +175,5 @@ const SignUp = () => {
 		</SafeAreaView>
 	);
 }
-
-const styles = StyleSheet.create({
-	statusBarContainer: {
-		position: "absolute",
-		top: 0,
-		left: 0,
-		right: 0,
-		height: 50,
-		zIndex: 100,
-	},
-	blurView: {
-		flex: 1,
-		height: "100%",
-		width: "100%",
-	},
-});
 
 export default SignUp;
