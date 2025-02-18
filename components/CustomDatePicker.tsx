@@ -1,7 +1,14 @@
 import React from 'react';
-import DatePicker from 'react-native-modern-datepicker';
+import { View, Platform } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useDatePickerStore } from '~/store/RegistrationStore';
+import { formatDate } from '~/utils/Date.utils';
 
 interface CustomDatePickerProps {
+	mode?: 'date' | 'time' | 'datetime';
+	minimumDate?: Date;
+	maximumDate?: Date;
+	onDateChange?: (date: Date) => void;
 	options?: {
 		textHeaderColor?: string;
 		textDefaultColor?: string;
@@ -10,23 +17,14 @@ interface CustomDatePickerProps {
 		textSecondaryColor?: string;
 		borderColor?: string;
 	};
-	mode?: 'calendar' | 'datepicker' | 'time' | 'monthYear';
-	current?: string;
-	minimumDate?: string;
-	maximumDate?: string;
-	onDateChange?: (date: string) => void;
 	[key: string]: any;
 }
 
-// fix warning: Support for defaultProps will be removed in React v17. Use a default value instead.
-const error = console.error;
-
-console.error = (...args) => {
-	if (/defaultProps/.test(args[0])) return;
-	error(...args);
-}
-
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
+	mode = 'date',
+	minimumDate = new Date(1900, 0, 1),
+	maximumDate = new Date(),
+	onDateChange = () => { },
 	options = {
 		textHeaderColor: '#513DB0',
 		textDefaultColor: '#535763',
@@ -35,23 +33,41 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 		textSecondaryColor: '#3A3A3A',
 		borderColor: 'rgba(83,87,99, 0.2)',
 	},
-	mode = 'calendar',
-	current = '2023-01-01',
-	minimumDate = '1900-01-01',
-	maximumDate = '2023-12-31',
-	onDateChange = () => { },
 	...rest
 }) => {
+	// Access Zustand store
+	const { openDateModal, currentDob, setOpenDateModal, setCurrentDob, setDob } = useDatePickerStore();
+
+	console.log('currentDob', currentDob);
+	console.log('openDateModal', openDateModal);
+	console.log('minimumDate', minimumDate);
+	console.log('maximumDate', maximumDate);
+
+	// Handle date change from the DateTimePicker
+	const handleDateChange = (event: any, selectedDate?: Date) => {
+		const currentDate = selectedDate || new Date(currentDob);
+		setOpenDateModal(false);
+		setCurrentDob(formatDate(currentDate));
+		setDob(formatDate(currentDate));
+		onDateChange(currentDate);
+	};
+
 	return (
-		<DatePicker
-			options={options}
-			mode={mode}
-			current={current}
-			minimumDate={minimumDate}
-			maximumDate={maximumDate}
-			onDateChange={onDateChange}
-			{...rest}
-		/>
+		<>
+			{/* DateTimePicker */}
+			{openDateModal && (
+				<DateTimePicker
+					testID="dateTimePicker"
+					value={new Date(currentDob)}
+					mode={mode}
+					display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+					onChange={handleDateChange}
+					minimumDate={minimumDate}
+					maximumDate={maximumDate}
+					{...rest}
+				/>
+			)}
+		</>
 	);
 };
 

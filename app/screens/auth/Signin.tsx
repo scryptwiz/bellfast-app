@@ -45,8 +45,8 @@ const SignIn = () => {
 				<View className="h-fit bg-p2 flex justify-center items-center">
 					<Image source={require("~assets/icons/splash-icon-light.png")} style={{ width: 200, height: 200 }} />
 				</View>
-				<View className="flex-1 bg-white px-8 pt-8" style={{ borderTopLeftRadius: 50 }}>
-					<View className="my-10">
+				<View className="flex-1 bg-white px-8 py-16" style={{ borderTopLeftRadius: 50 }}>
+					<View className="mb-10">
 						<Text className="text-3xl font-bold text-s1">Sign In</Text>
 					</View>
 					<View className="flex flex-col">
@@ -67,7 +67,7 @@ const SignIn = () => {
 									<TextInput
 										secureTextEntry={secureTextEntry}
 										className="flex-1 text-lg p-4"
-										placeholder="....."
+										placeholder="Password"
 										value={password}
 										onChangeText={setPassword}
 									/>

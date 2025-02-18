@@ -3,11 +3,12 @@ import Feather from '@expo/vector-icons/Feather';
 import { useState } from "react";
 import Checkbox from 'expo-checkbox';
 import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Alert, ScrollView, Modal } from "react-native";
-import { formatDate } from "~/utils/Date.utils";
 import CustomDatePicker from "~/components/CustomDatePicker";
+import { useDatePickerStore } from "~/store/RegistrationStore";
 
 const SignUp = () => {
-	const today = new Date();
+	const { dob, setOpenDateModal, maxDob } = useDatePickerStore();
+
 	const [email, setEmail] = useState('');
 	const [fullName, setFullName] = useState('');
 	const [password, setPassword] = useState('');
@@ -16,17 +17,6 @@ const SignUp = () => {
 	const [passwordError, setPasswordError] = useState('');
 	const [fullNameError, setFullNameError] = useState('');
 	const [isChecked, setChecked] = useState(false);
-	const [openDateModal, setOpenDateModal] = useState(false)
-	const eighteenYearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
-	const [maxDob,] = useState(formatDate(eighteenYearsAgo))
-	const [currentDob, setCurrentDob] = useState(formatDate(eighteenYearsAgo))
-	const [dob, setDob] = useState("");
-
-	const handleDateChange = (date: string) => {
-		setCurrentDob(date)
-		setDob(date)
-		setOpenDateModal(false)
-	}
 
 
 	const validateEmail = (email: string) => {
@@ -92,7 +82,8 @@ const SignUp = () => {
 								<TouchableOpacity className="rounded-2xl p-4 bg-gray-100 text-lg" onPress={() => setOpenDateModal(true)}>
 									<Text className={`${dob ? "text-s1" : "text-s2"} text-lg`}>{dob ? dob : "YYYY-MM-DD"}</Text>
 								</TouchableOpacity>
-								{fullNameError ? <Text className="text-red-500 ml-2">{fullNameError}</Text> : null}
+								<CustomDatePicker maximumDate={new Date(maxDob)} />
+								{/* {fullNameError ? <Text className="text-red-500 ml-2">{fullNameError}</Text> : null} */}
 							</View>
 							<View className="flex flex-col gap-2">
 								<Text className="text-s2 ml-2 text-lg font-medium">Email</Text>
@@ -110,7 +101,7 @@ const SignUp = () => {
 									<TextInput
 										secureTextEntry={secureTextEntry}
 										className="flex-1 text-lg p-4"
-										placeholder="........."
+										placeholder="Password"
 										value={password}
 										onChangeText={setPassword}
 									/>
@@ -150,27 +141,6 @@ const SignUp = () => {
 						</View>
 					</View>
 				</View>
-
-				{/* Date Picker Modal */}
-				<Modal
-					animationType="slide"
-					transparent={true}
-					visible={openDateModal}
-				>
-					<View className="flex-1 justify-center items-center">
-						<View className="m-5 bg-white rounded-2xl w-11/12 p-8 items-center shadow-2xl">
-							<CustomDatePicker
-								current={`${currentDob}`}
-								minimumDate="1900/01/01"
-								maximumDate={`${maxDob}`}
-								onDateChange={handleDateChange}
-							/>
-							<TouchableOpacity onPress={() => setOpenDateModal(false)} className="p-4">
-								<Text className="text-s2">Close</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</Modal>
 			</ScrollView>
 		</SafeAreaView>
 	);
