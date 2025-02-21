@@ -4,6 +4,7 @@
     "slug": "bellfast-app",
     "version": "1.0.0",
     "scheme": "bellfast-app",
+    "newArchEnabled": true,
     "web": {
       "bundler": "metro",
       "output": "static",

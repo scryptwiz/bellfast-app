@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-date-picker';
+import { COLOR } from '~/constants/Colors';
 import { useDatePickerStore } from '~/store/RegistrationStore';
 import { formatDate } from '~/utils/Date.utils';
 
@@ -26,11 +26,11 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 	maximumDate = new Date(),
 	onDateChange = () => { },
 	options = {
-		textHeaderColor: '#513DB0',
-		textDefaultColor: '#535763',
+		textHeaderColor: COLOR.p2,
+		textDefaultColor: COLOR.s1,
 		selectedTextColor: '#fff',
-		mainColor: '#2B2D63',
-		textSecondaryColor: '#3A3A3A',
+		mainColor: COLOR.P1,
+		textSecondaryColor: COLOR.s2,
 		borderColor: 'rgba(83,87,99, 0.2)',
 	},
 	...rest
@@ -38,32 +38,37 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
 	// Access Zustand store
 	const { openDateModal, currentDob, setOpenDateModal, setCurrentDob, setDob } = useDatePickerStore();
 
-	console.log('currentDob', currentDob);
-	console.log('openDateModal', openDateModal);
-	console.log('minimumDate', minimumDate);
-	console.log('maximumDate', maximumDate);
-
-	// Handle date change from the DateTimePicker
-	const handleDateChange = (event: any, selectedDate?: Date) => {
-		const currentDate = selectedDate || new Date(currentDob);
+	// Handle date change from the DatePicker
+	const handleDateChange = (selectedDate: Date) => {
 		setOpenDateModal(false);
-		setCurrentDob(formatDate(currentDate));
-		setDob(formatDate(currentDate));
-		onDateChange(currentDate);
+		setCurrentDob(formatDate(selectedDate));
+		setDob(formatDate(selectedDate));
+		onDateChange(selectedDate);
 	};
 
 	return (
 		<>
-			{/* DateTimePicker */}
+			{/* DatePicker */}
 			{openDateModal && (
-				<DateTimePicker
-					testID="dateTimePicker"
-					value={new Date(currentDob)}
+				<DatePicker
+					modal
+					open={openDateModal}
+					date={new Date(currentDob)}
 					mode={mode}
-					display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-					onChange={handleDateChange}
+					onConfirm={(date) => {
+						handleDateChange(date);
+					}}
+					onCancel={() => {
+						setOpenDateModal(false);
+					}}
 					minimumDate={minimumDate}
 					maximumDate={maximumDate}
+					theme="light"
+					confirmText="Confirm"
+					cancelText="Cancel"
+					title="Select Date"
+					buttonColor={options.mainColor}
+					dividerColor={options.borderColor}
 					{...rest}
 				/>
 			)}

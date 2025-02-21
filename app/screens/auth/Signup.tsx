@@ -82,7 +82,9 @@ const SignUp = () => {
 								<TouchableOpacity className="rounded-2xl p-4 bg-gray-100 text-lg" onPress={() => setOpenDateModal(true)}>
 									<Text className={`${dob ? "text-s1" : "text-s2"} text-lg`}>{dob ? dob : "YYYY-MM-DD"}</Text>
 								</TouchableOpacity>
-								<CustomDatePicker maximumDate={new Date(maxDob)} />
+								<CustomDatePicker
+									maximumDate={new Date(maxDob)}
+								/>
 								{/* {fullNameError ? <Text className="text-red-500 ml-2">{fullNameError}</Text> : null} */}
 							</View>
 							<View className="flex flex-col gap-2">
