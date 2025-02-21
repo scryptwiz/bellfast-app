@@ -5,6 +5,7 @@ import Checkbox from 'expo-checkbox';
 import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Alert, ScrollView, Modal } from "react-native";
 import CustomDatePicker from "~/components/CustomDatePicker";
 import { useDatePickerStore } from "~/store/RegistrationStore";
+import { COLOR } from "~/constants/Colors";
 
 const SignUp = () => {
 	const { dob, setOpenDateModal, maxDob } = useDatePickerStore();
@@ -17,6 +18,8 @@ const SignUp = () => {
 	const [passwordError, setPasswordError] = useState('');
 	const [fullNameError, setFullNameError] = useState('');
 	const [isChecked, setChecked] = useState(false);
+	const [termsError, setTermsError] = useState('');
+	const [dobError, setDobError] = useState('');
 
 
 	const validateEmail = (email: string) => {
@@ -25,38 +28,32 @@ const SignUp = () => {
 	};
 
 	const handleSignIn = () => {
-		let valid = true;
+		const validations = [
+			{ value: email, errorSetter: setEmailError, errorMessage: 'Please enter a valid email address.', isValid: validateEmail(email) },
+			{ value: fullName, errorSetter: setFullNameError, errorMessage: 'Please enter your full name.', isValid: true },
+			{ value: password, errorSetter: setPasswordError, errorMessage: 'Please enter your password.', isValid: true },
+			{ value: dob, errorSetter: setDobError, errorMessage: 'Please select your date of birth.', isValid: true },
+			{ value: isChecked, errorSetter: setTermsError, errorMessage: 'You must agree to the terms and conditions.', isValid: true },
+		];
 
-		if (!validateEmail(email)) {
-			setEmailError('Please enter a valid email address.');
-			valid = false;
-		} else {
-			setEmailError('');
-		}
+		const isFormValid = validations.every(({ value, errorSetter, errorMessage, isValid }) => {
+			if (!value || !isValid) {
+				errorSetter(errorMessage);
+				return false;
+			} else {
+				errorSetter('');
+				return true;
+			}
+		});
 
-		if (fullName === '') {
-			setFullNameError('Please enter your full name.');
-			valid = false;
-		} else {
-			setFullNameError('');
-		}
-
-		if (password === '') {
-			setPasswordError('Please enter your password.');
-			valid = false;
-		} else {
-			setPasswordError('');
-		}
-
-		if (valid) {
-			// Call your sign-in function here
-			Alert.alert('Sign In', 'Sign in successful!');
+		if (isFormValid) {
+			Alert.alert('Sign Up', 'Sign up successful!');
 		}
 	};
 
 	return (
 		<SafeAreaView className="flex-1 bg-p2">
-			<StatusBar backgroundColor="#513DB0" barStyle="light-content" />
+			<StatusBar backgroundColor={COLOR.p2} barStyle="light-content" />
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<View className="h-fit bg-p2 flex justify-center items-center">
 					<Image source={require("~assets/icons/splash-icon-light.png")} style={{ width: 200, height: 200 }} />
@@ -85,7 +82,7 @@ const SignUp = () => {
 								<CustomDatePicker
 									maximumDate={new Date(maxDob)}
 								/>
-								{/* {fullNameError ? <Text className="text-red-500 ml-2">{fullNameError}</Text> : null} */}
+								{dobError ? <Text className="text-red-500 ml-2">{dobError}</Text> : null}
 							</View>
 							<View className="flex flex-col gap-2">
 								<Text className="text-s2 ml-2 text-lg font-medium">Email</Text>
@@ -114,17 +111,22 @@ const SignUp = () => {
 								{passwordError ? <Text className="text-red-500 ml-2">{passwordError}</Text> : null}
 							</View>
 						</View>
-						<View className="flex-1 flex-row items-center gap-2 mt-4 mb-7">
-							<Checkbox
-								className="m-2"
-								value={isChecked}
-								onValueChange={() => setChecked(prev => !prev)}
-								color={isChecked ? '#513DB0' : '#535763'}
-							/>
-							<View className="flex flex-row items-center gap-1">
-								<Text className="text-s2">I Agree With Bellfast's </Text>
-								<TouchableOpacity className="flex items-center w-fit"><Text className="text-p2 text-lg">Terms & Conditions</Text></TouchableOpacity>
+						<View className="flex-1 flex-col gap-2 mt-4 mb-7">
+							<View className="flex flex-row items-center gap-2">
+								<Checkbox
+									className="m-2"
+									value={isChecked}
+									onValueChange={() => setChecked(prev => !prev)}
+									color={isChecked ? COLOR.p2 : COLOR.s2}
+								/>
+								<View className="flex flex-row items-center gap-1">
+									<TouchableOpacity className="flex items-center w-fit" onPress={() => setChecked(prev => !prev)}>
+										<Text className="text-s2">I Agree With Bellfast's </Text>
+									</TouchableOpacity>
+									<TouchableOpacity className="flex items-center w-fit"><Text className="text-p2 text-lg">Terms & Conditions</Text></TouchableOpacity>
+								</View>
 							</View>
+							{termsError ? <Text className="text-red-500 ml-2">{termsError}</Text> : null}
 						</View>
 						<TouchableOpacity className="bg-p2 rounded-2xl p-4 mb-7" onPress={handleSignIn}>
 							<Text className="text-white text-center text-lg font-bold">Sign Up</Text>

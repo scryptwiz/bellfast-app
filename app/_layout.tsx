@@ -5,6 +5,7 @@ import { useFonts } from 'expo-font';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimatedSplashScreen from './screens/onboarding/AnimatedSplashScreen';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
 export default function Layout () {
   const router = useRouter();
@@ -55,5 +56,13 @@ export default function Layout () {
     );
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? -64 : 0}
+    >
+      <Stack screenOptions={{ headerShown: false }} />
+    </KeyboardAvoidingView>
+  )
 }
