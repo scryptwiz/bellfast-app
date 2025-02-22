@@ -1,43 +1,34 @@
 import '../global.css';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { useState } from 'react';
+import { KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
 import AnimatedSplashScreen from './screens/onboarding/AnimatedSplashScreen';
-import { validateToken } from '~/utils/services/auth.service';
-import { useUserStore } from '~/store/user.store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useValidateToken } from '~/utils/services/auth.service';
+
+// Create QueryClient instance
+const queryClient = new QueryClient();
 
 export default function Layout () {
-  const { clearUser } = useUserStore();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppContent />
+    </QueryClientProvider>
+  );
+}
 
-  const [appReady, setAppReady] = useState(false);
+// Move everything inside AppContent to ensure React Query is available
+function AppContent () {
+  const { isLoading } = useValidateToken();
   const [splashAnimationFinished, setSplashAnimationFinished] = useState(false);
-  const [isTokenValidated, setIsTokenValidated] = useState(false);
 
   const [fontsLoaded] = useFonts({
     'SpaceMono': require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  // Validate the authentication token
-  useEffect(() => {
-    AsyncStorage.removeItem('hasEverSignedIn');
-    const checkAuthentication = async () => {
-      const isValid = await validateToken();
-      if (!isValid) {
-        clearUser();
-      }
-      setIsTokenValidated(true);
-    };
-
-    if (fontsLoaded) {
-      setAppReady(true);
-      checkAuthentication();
-    }
-  }, [fontsLoaded]);
-
-  // Show splash screen until ready
-  if (!appReady || !splashAnimationFinished || !isTokenValidated) {
+  // Show splash screen until everything is ready
+  if (!fontsLoaded || !splashAnimationFinished || isLoading) {
     return (
       <AnimatedSplashScreen
         onAnimationFinish={(isCancelled) => {
@@ -53,6 +44,7 @@ export default function Layout () {
       style={{ flex: 1 }}
       keyboardVerticalOffset={Platform.OS === 'ios' ? -64 : 0}
     >
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
       <Stack screenOptions={{ headerShown: false }} />
     </KeyboardAvoidingView>
   );

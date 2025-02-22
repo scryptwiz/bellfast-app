@@ -13,7 +13,7 @@ const AnimatedSplashScreen = ({ onAnimationFinish = (isCancelled) => { } }: Anim
 			exiting={BounceOutLeft.duration(1000)}
 			className='bg-white flex-1 items-center justify-center'
 		>
-			<StatusBar barStyle="dark-content" />
+			<StatusBar backgroundColor="#fff" barStyle="dark-content" />
 			<LottieView
 				autoPlay
 				onAnimationFinish={onAnimationFinish}
