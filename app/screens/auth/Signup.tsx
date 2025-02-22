@@ -6,6 +6,7 @@ import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View
 import CustomDatePicker from "~/components/CustomDatePicker";
 import { useDatePickerStore } from "~/store/RegistrationStore";
 import { COLOR } from "~/constants/Colors";
+import { validateFields, validatePassword } from "~/utils/Validation.utils";
 
 const SignUp = () => {
 	const { dob, setOpenDateModal, maxDob } = useDatePickerStore();
@@ -27,24 +28,16 @@ const SignUp = () => {
 		return re.test(email);
 	};
 
-	const handleSignIn = () => {
+	const handleSignUp = () => {
 		const validations = [
 			{ value: email, errorSetter: setEmailError, errorMessage: 'Please enter a valid email address.', isValid: validateEmail(email) },
-			{ value: fullName, errorSetter: setFullNameError, errorMessage: 'Please enter your full name.', isValid: true },
-			{ value: password, errorSetter: setPasswordError, errorMessage: 'Please enter your password.', isValid: true },
-			{ value: dob, errorSetter: setDobError, errorMessage: 'Please select your date of birth.', isValid: true },
-			{ value: isChecked, errorSetter: setTermsError, errorMessage: 'You must agree to the terms and conditions.', isValid: true },
+			{ value: fullName, errorSetter: setFullNameError, errorMessage: 'Please enter your full name.' },
+			{ value: password, errorSetter: setPasswordError, errorMessage: 'Password must be at least 8 characters long, contain no spaces, at least one symbol, and at least one number.', isValid: validatePassword(password) },
+			{ value: dob, errorSetter: setDobError, errorMessage: 'Please select your date of birth.' },
+			{ value: isChecked, errorSetter: setTermsError, errorMessage: 'You must agree to the terms and conditions.' },
 		];
 
-		const isFormValid = validations.every(({ value, errorSetter, errorMessage, isValid }) => {
-			if (!value || !isValid) {
-				errorSetter(errorMessage);
-				return false;
-			} else {
-				errorSetter('');
-				return true;
-			}
-		});
+		const isFormValid = validateFields(validations);
 
 		if (isFormValid) {
 			Alert.alert('Sign Up', 'Sign up successful!');
@@ -65,10 +58,10 @@ const SignUp = () => {
 					<View className="flex flex-col">
 						<View className="flex flex-col gap-10">
 							<View className="flex flex-col gap-2">
-								<Text className="text-s2 ml-2 text-lg font-medium">Full Name</Text>
+								<Text className="text-s2 ml-2 text-lg font-medium">Full Name (First and Last Name)</Text>
 								<TextInput
 									className="rounded-2xl p-4 bg-gray-100 text-lg"
-									placeholder="Full Name"
+									placeholder="Enter your first and last name"
 									value={fullName}
 									onChangeText={setFullName}
 								/>
@@ -108,6 +101,13 @@ const SignUp = () => {
 										{secureTextEntry ? <Feather name="eye-off" size={20} color="black" /> : <Feather name="eye" size={20} color="black" />}
 									</TouchableOpacity>
 								</View>
+								<Text style={{ fontSize: 12, color: 'gray', marginBottom: 10 }}>
+									Password must:
+									- Be at least 8 characters long
+									- Contain no spaces
+									- Contain at least one symbol
+									- Contain at least one number
+								</Text>
 								{passwordError ? <Text className="text-red-500 ml-2">{passwordError}</Text> : null}
 							</View>
 						</View>
@@ -128,7 +128,7 @@ const SignUp = () => {
 							</View>
 							{termsError ? <Text className="text-red-500 ml-2">{termsError}</Text> : null}
 						</View>
-						<TouchableOpacity className="bg-p2 rounded-2xl p-4 mb-7" onPress={handleSignIn}>
+						<TouchableOpacity className="bg-p2 rounded-2xl p-4 mb-7" onPress={handleSignUp}>
 							<Text className="text-white text-center text-lg font-bold">Sign Up</Text>
 						</TouchableOpacity>
 						<TouchableOpacity className="border border-p2 rounded-2xl p-4 flex flex-row items-center justify-center gap-5">

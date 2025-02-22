@@ -2,6 +2,8 @@ import { Link } from "expo-router";
 import { Image, SafeAreaView, StatusBar, Text, TextInput, TouchableOpacity, View, Alert, ScrollView } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { useState } from "react";
+import { COLOR } from "~/constants/Colors";
+import { validateFields } from "~/utils/Validation.utils";
 
 const SignIn = () => {
 	const [email, setEmail] = useState('');
@@ -16,31 +18,21 @@ const SignIn = () => {
 	};
 
 	const handleSignIn = () => {
-		let valid = true;
+		const validations = [
+			{ value: email, errorSetter: setEmailError, errorMessage: 'Please enter a valid email address.', isValid: validateEmail(email) },
+			{ value: password, errorSetter: setPasswordError, errorMessage: 'Please enter your password.' },
+		];
 
-		if (!validateEmail(email)) {
-			setEmailError('Please enter a valid email address.');
-			valid = false;
-		} else {
-			setEmailError('');
-		}
+		const isFormValid = validateFields(validations);
 
-		if (password === '') {
-			setPasswordError('Please enter your password.');
-			valid = false;
-		} else {
-			setPasswordError('');
-		}
-
-		if (valid) {
-			// Call your sign-in function here
+		if (isFormValid) {
 			Alert.alert('Sign In', 'Sign in successful!');
 		}
 	};
 
 	return (
 		<SafeAreaView className="flex-1 bg-p2">
-			<StatusBar backgroundColor="#513DB0" barStyle="light-content" />
+			<StatusBar backgroundColor={COLOR.p2} barStyle="light-content" />
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<View className="h-fit bg-p2 flex justify-center items-center">
 					<Image source={require("~assets/icons/splash-icon-light.png")} style={{ width: 200, height: 200 }} />

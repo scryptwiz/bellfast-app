@@ -1,18 +1,28 @@
-import { Stack, Link } from 'expo-router';
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
+import { useUserStore } from '~/store/user.store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Button } from '~/components/Button';
-import { Container } from '~/components/Container';
-import { ScreenContent } from '~/components/ScreenContent';
+export default function Index () {
+  const router = useRouter();
+  const { user } = useUserStore();
 
-export default function Home () {
-  return (
-    <>
-      <Container>
-        <ScreenContent path="app/index.tsx" title="Home" />
-        <Link href={{ pathname: '/screens/auth/Signin', params: { name: 'Dan' } }} asChild>
-          <Button title="Show Details" />
-        </Link>
-      </Container>
-    </>
-  );
+  useEffect(() => {
+    const redirectUser = async () => {
+      const hasSignedIn = await AsyncStorage.getItem('hasEverSignedIn');
+
+      if (hasSignedIn === null) {
+        await AsyncStorage.setItem('hasEverSignedIn', 'true');
+        router.replace('/screens/onboarding/OnboardingScreen');
+      } else if (user) {
+        router.replace('/screens/home/Home');
+      } else {
+        router.replace('/screens/auth/Signin');
+      }
+    };
+
+    redirectUser();
+  }, [user]);
+
+  return null; // No UI needed, just redirecting
 }
