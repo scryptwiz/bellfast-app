@@ -4,6 +4,9 @@ import Feather from '@expo/vector-icons/Feather';
 import { useState } from "react";
 import { COLOR } from "~/constants/Colors";
 import { validateFields } from "~/utils/Validation.utils";
+import { useLogin } from "~/utils/services/auth.service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserStore } from "~/store/user.store";
 
 const SignIn = () => {
 	const [email, setEmail] = useState('');
@@ -11,6 +14,9 @@ const SignIn = () => {
 	const [secureTextEntry, setSecureTextEntry] = useState(true);
 	const [emailError, setEmailError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
+	const { user } = useUserStore();
+
+	const { mutate: login, isPending: isLoading } = useLogin();
 
 	const validateEmail = (email: string) => {
 		const re = /\S+@\S+\.\S+/;
@@ -26,8 +32,10 @@ const SignIn = () => {
 		const isFormValid = validateFields(validations);
 
 		if (isFormValid) {
-			Alert.alert('Sign In', 'Sign in successful!');
+			login({ role: 'user', email, password });
 		}
+		console.log("Token", AsyncStorage.getItem('authToken'));
+		console.log("User", user);
 	};
 
 	return (
@@ -73,8 +81,8 @@ const SignIn = () => {
 						<TouchableOpacity className="flex ml-auto w-fit mt-4 mb-7">
 							<Text className="text-s2">Forgot Password?</Text>
 						</TouchableOpacity>
-						<TouchableOpacity className="bg-p2 rounded-2xl p-4 mb-7" onPress={handleSignIn}>
-							<Text className="text-white text-center text-lg font-bold">Sign In</Text>
+						<TouchableOpacity className={`${isLoading ? 'bg-p2/80' : 'bg-p2'} rounded-2xl p-4 mb-7`} onPress={handleSignIn} disabled={isLoading}>
+							<Text className="text-white text-center text-lg font-bold">{isLoading ? 'Signing In...' : 'Sign In'}</Text>
 						</TouchableOpacity>
 						<TouchableOpacity className="border border-p2 rounded-2xl p-4 flex flex-row items-center justify-center gap-5">
 							<Image source={require("~assets/icons/google.png")} style={{ width: 20, height: 20 }} />

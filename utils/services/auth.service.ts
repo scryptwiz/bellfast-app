@@ -2,7 +2,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import axios from 'axios';
 import api from './api';
 import { useUserStore } from '~/store/user.store';
 import { useEffect } from 'react';
@@ -12,12 +11,16 @@ const AUTH_TOKEN_KEY = 'authToken';
 const VALIDATE_TOKEN_KEY = 'validateToken';
 
 interface LoginCredentials {
+	role: string;
 	email: string;
 	password: string;
 }
 
 interface AuthResponse {
-	token: string;
+	statusCode: number;
+	status: string;
+	title: string;
+	message: string;
 	data: any;
 }
 
@@ -36,14 +39,15 @@ export const useLogin = () => {
 	return useMutation<AuthResponse, unknown, LoginCredentials>({
 		mutationFn: async (credentials) => {
 			const { data } = await api.post<AuthResponse>('/auth/login', credentials);
-			await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
-			api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+			await AsyncStorage.setItem(AUTH_TOKEN_KEY, data?.data?.token);
+			api.defaults.headers.common['Authorization'] = `Bearer ${data?.data?.token}`;
 			return data;
 		},
 		onSuccess: (data) => {
 			setUser(data?.data);
 			queryClient.invalidateQueries({ queryKey: [VALIDATE_TOKEN_KEY] });
 			showToast('success', 'Success', 'Login successful');
+			console.log('Login Success:', data);
 		},
 		onError: (error) => {
 			const errData = getError(error);

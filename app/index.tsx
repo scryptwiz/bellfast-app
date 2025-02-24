@@ -24,5 +24,5 @@ export default function Index () {
     redirectUser();
   }, [user]);
 
-  return null; // No UI needed, just redirecting
+  return null;
 }
