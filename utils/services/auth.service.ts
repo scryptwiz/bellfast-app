@@ -1,48 +1,84 @@
-import { useQuery } from '@tanstack/react-query';
-import api from './api';
-import axios from 'axios';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import api from './api';
 import { useUserStore } from '~/store/user.store';
 import { useEffect } from 'react';
+import { getError } from '../functions/response.utils';
 
-// API function to validate token
-const fetchValidateToken = async () => {
-	const response = await api.get('/auth/validate-jwt');
-	return response.data;
+const AUTH_TOKEN_KEY = 'authToken';
+const VALIDATE_TOKEN_KEY = 'validateToken';
+
+interface LoginCredentials {
+	email: string;
+	password: string;
+}
+
+interface AuthResponse {
+	token: string;
+	data: any;
+}
+
+const showToast = (type: string, title: string, message?: string) => {
+	Toast.show({
+		type,
+		text1: title,
+		text2: message,
+	});
 };
 
-// Custom hook using TanStack Query
+export const useLogin = () => {
+	const queryClient = useQueryClient();
+	const { setUser } = useUserStore();
+
+	return useMutation<AuthResponse, unknown, LoginCredentials>({
+		mutationFn: async (credentials) => {
+			const { data } = await api.post<AuthResponse>('/auth/login', credentials);
+			await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
+			api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+			return data;
+		},
+		onSuccess: (data) => {
+			setUser(data?.data);
+			queryClient.invalidateQueries({ queryKey: [VALIDATE_TOKEN_KEY] });
+			showToast('success', 'Success', 'Login successful');
+		},
+		onError: (error) => {
+			const errData = getError(error);
+			showToast('error', errData?.title, errData?.message);
+			console.error('Login Error:', errData);
+		},
+	});
+};
+
 export const useValidateToken = () => {
 	const { setUser, clearUser } = useUserStore();
 
-	// Fetch token validation
-	const { data, error, isLoading } = useQuery({
-		queryKey: ['validateToken'],
-		queryFn: fetchValidateToken,
+	const { data, error, isLoading, isError } = useQuery({
+		queryKey: [VALIDATE_TOKEN_KEY],
+		queryFn: async () => {
+			const { data } = await api.get('/auth/validate-jwt');
+			return data;
+		},
 		retry: 1,
-		staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+		staleTime: 1000 * 60 * 30,
 	});
 
-	// Handle success & error inside useEffect (prevents infinite loop)
 	useEffect(() => {
 		if (data) {
-			console.log('Token Validation Success:', data);
 			setUser(data?.data);
+			console.log('Token Validation Success:', data);
 		}
 
-		if (error) {
-			if (axios.isAxiosError(error)) {
-				Toast.show({
-					type: 'error',
-					text1: error.response?.data?.message || 'An error occurred',
-				});
-				console.log('Token Validation Error:', error.response?.data || error);
-			} else {
-				console.log('Token Validation Unexpected Error:', error);
-			}
-			clearUser(); // Clear user state if validation fails
+		if (isError) {
+			const errData = getError(error);
+			showToast('error', errData?.title, errData?.message);
+			console.log('Validation Error:', errData);
+			clearUser();
 		}
-	}, [data, error, setUser, clearUser]);
+	}, [data, error, isError, setUser, clearUser]);
 
 	return { isLoading };
 };
