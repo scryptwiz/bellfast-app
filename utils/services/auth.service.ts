@@ -8,9 +8,7 @@ import { getError } from '../functions/response.utils';
 import { AuthResponseType, LoginCredentialsType, SignupCredentialsType } from '~/types/auth';
 import { router, useRouter } from 'expo-router';
 import { ToastService } from '../toast.util';
-
-export const AUTH_TOKEN_KEY = 'authToken';
-export const VALIDATE_TOKEN_KEY = 'validateToken';
+import { AUTH_TOKEN_KEY, VALIDATE_TOKEN_KEY } from '~/constants/AuthConstants';
 
 export const useLogin = () => {
   const router = useRouter();
@@ -30,7 +28,7 @@ export const useLogin = () => {
       setUser(data?.data);
       queryClient.invalidateQueries({ queryKey: [VALIDATE_TOKEN_KEY] });
       ToastService.showToast('success', 'Login successful');
-      router.replace('/screens/home/Home');
+      router.replace('/screens/home');
     },
     onError: async (error) => {
       const errData = getError(error);

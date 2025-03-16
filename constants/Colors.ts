@@ -3,5 +3,6 @@ export const COLOR = {
   p2: '#513DB0',
   s1: '#3A3A3A',
   s2: '#535763',
-  W: '#FFFFFF',
+  s3: '#6F767E',
+  w: '#FFFFFF',
 };
