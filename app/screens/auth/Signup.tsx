@@ -139,6 +139,7 @@ const SignUp = () => {
                   placeholder="example@mail.com"
                   value={email}
                   onChangeText={setEmail}
+                  autoCapitalize="none"
                 />
                 {emailError ? <Text className="ml-2 text-red-500">{emailError}</Text> : null}
               </View>

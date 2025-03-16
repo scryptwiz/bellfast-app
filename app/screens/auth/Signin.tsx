@@ -11,30 +11,20 @@ import {
   ScrollView,
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { COLOR } from '~/constants/Colors';
-import { validateFields } from '~/utils/Validation.utils';
+import { validateEmail, validateFields } from '~/utils/Validation.utils';
 import { useLogin } from '~/utils/services/auth.service';
-import { useUserStore } from '~/store/user.store';
 import { Button } from '~/components/Button';
-import Toast, { ToastHandleType } from '~/components/Toast';
 
 const SignIn = () => {
-  const toastRef = useRef<ToastHandleType>();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const { user } = useUserStore();
 
   const { mutate: login, isPending: isLoading } = useLogin();
-
-  const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
 
   const handleSignIn = async () => {
     const validations = [
@@ -81,6 +71,7 @@ const SignIn = () => {
                   placeholder="example@mail.com"
                   value={email}
                   onChangeText={setEmail}
+                  autoCapitalize="none"
                 />
                 {emailError ? <Text className="ml-2 text-red-500">{emailError}</Text> : null}
               </View>

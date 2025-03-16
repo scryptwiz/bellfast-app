@@ -6,15 +6,17 @@ import { useUserStore } from '~/store/user.store';
 import { useEffect } from 'react';
 import { getError } from '../functions/response.utils';
 import { AuthResponseType, LoginCredentialsType, SignupCredentialsType } from '~/types/auth';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { ToastService } from '../toast.util';
 
 export const AUTH_TOKEN_KEY = 'authToken';
 export const VALIDATE_TOKEN_KEY = 'validateToken';
 
 export const useLogin = () => {
-  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const { setUser } = useUserStore();
+  const queryClient = useQueryClient();
 
   return useMutation<AuthResponseType, unknown, LoginCredentialsType>({
     mutationFn: async (credentials: LoginCredentialsType) => {
@@ -28,11 +30,11 @@ export const useLogin = () => {
       setUser(data?.data);
       queryClient.invalidateQueries({ queryKey: [VALIDATE_TOKEN_KEY] });
       ToastService.showToast('success', 'Login successful');
+      router.replace('/screens/home/Home');
     },
     onError: async (error) => {
       const errData = getError(error);
       ToastService.showToast('error', errData?.message);
-      // console.error('Login Error:', errData);
     },
   });
 };
@@ -53,14 +55,11 @@ export const useValidateToken = () => {
   useEffect(() => {
     if (data) {
       setUser(data?.data);
-      console.log('Token Validation Success:', data);
-      ToastService.showToast('success', 'Token Validation Success');
     }
 
     if (isError) {
       const errData = getError(error);
       ToastService.showToast('error', errData?.message);
-      console.log('Validation Error:', errData);
       clearUser();
     }
   }, [data, error, isError, setUser, clearUser]);
@@ -85,6 +84,15 @@ export const useSignupUser = () => {
       const errData = getError(error);
       ToastService.showToast('error', errData?.message);
       console.error('Signup Error:', errData);
+    },
+  });
+};
+
+export const useSendEmailOtp = () => {
+  return useMutation<AuthResponseType, unknown, { email: string }>({
+    mutationFn: async ({ email }) => {
+      const { data } = await api.post('/auth/generate-email-otp', { email });
+      return data;
     },
   });
 };
