@@ -9,9 +9,8 @@ export default function Index() {
   const { user } = useUserStore();
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    const timeout = setTimeout(() => {
       const hasSignedIn = storage.getString('hasEverSignedIn');
-
       if (!hasSignedIn) {
         storage.set('hasEverSignedIn', 'true');
         router.replace('/screens/onboarding/OnboardingScreen');
@@ -20,7 +19,9 @@ export default function Index() {
       } else {
         router.replace('/screens/auth/Signin');
       }
-    });
+    }, 0);
+
+    return () => clearTimeout(timeout);
   }, [user]);
 
   return null;
