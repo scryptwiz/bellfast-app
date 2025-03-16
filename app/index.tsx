@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useUserStore } from '~/store/user.store';
+import { InteractionManager } from 'react-native';
 import { storage } from '~/lib/storage/mmkv';
 
 export default function Index() {
@@ -8,10 +9,10 @@ export default function Index() {
   const { user } = useUserStore();
 
   useEffect(() => {
-    const redirectUser = () => {
+    InteractionManager.runAfterInteractions(() => {
       const hasSignedIn = storage.getString('hasEverSignedIn');
 
-      if (hasSignedIn === null) {
+      if (!hasSignedIn) {
         storage.set('hasEverSignedIn', 'true');
         router.replace('/screens/onboarding/OnboardingScreen');
       } else if (user) {
@@ -19,9 +20,7 @@ export default function Index() {
       } else {
         router.replace('/screens/auth/Signin');
       }
-    };
-
-    redirectUser();
+    });
   }, [user]);
 
   return null;
