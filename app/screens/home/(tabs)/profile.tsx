@@ -13,9 +13,9 @@ import {
   ChevronRight,
   LogOut,
 } from 'lucide-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLOR } from '~/constants/Colors';
 import { useUserStore } from '~/store/user.store';
+import { storage } from '~/lib/storage/mmkv';
 
 const Profile = () => {
   const { user, clearUser } = useUserStore();
@@ -28,7 +28,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.clear();
+      storage.clearAll();
       clearUser();
 
       router.replace('/screens/onboarding/OnboardingScreen');

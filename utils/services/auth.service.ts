@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from './api';
 import { useUserStore } from '~/store/user.store';
 import { useEffect } from 'react';
@@ -9,6 +8,7 @@ import { AuthResponseType, LoginCredentialsType, SignupCredentialsType } from '~
 import { router, useRouter } from 'expo-router';
 import { ToastService } from '../toast.util';
 import { AUTH_TOKEN_KEY, VALIDATE_TOKEN_KEY } from '~/constants/AuthConstants';
+import { storage } from '~/lib/storage/mmkv';
 
 export const useLogin = () => {
   const router = useRouter();
@@ -19,7 +19,7 @@ export const useLogin = () => {
   return useMutation<AuthResponseType, unknown, LoginCredentialsType>({
     mutationFn: async (credentials: LoginCredentialsType) => {
       const { data } = await api.post<AuthResponseType>('/auth/login', credentials);
-      await AsyncStorage.setItem(AUTH_TOKEN_KEY, data?.data?.token);
+      storage.set(AUTH_TOKEN_KEY, data?.data?.token);
       api.defaults.headers.common['Authorization'] = `Bearer ${data?.data?.token}`;
 
       return data;
