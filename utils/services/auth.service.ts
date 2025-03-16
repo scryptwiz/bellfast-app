@@ -5,7 +5,7 @@ import { useUserStore } from '~/store/user.store';
 import { useEffect } from 'react';
 import { getError } from '../functions/response.utils';
 import { AuthResponseType, LoginCredentialsType, SignupCredentialsType } from '~/types/auth';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { ToastService } from '../toast.util';
 import { AUTH_TOKEN_KEY, VALIDATE_TOKEN_KEY } from '~/constants/AuthConstants';
 import { storage } from '~/lib/storage/mmkv';
@@ -67,17 +67,18 @@ export const useValidateToken = () => {
 };
 
 export const useSignupUser = () => {
+  const router = useRouter();
   const { setUser } = useUserStore();
 
   return useMutation<AuthResponseType, unknown, SignupCredentialsType>({
     mutationFn: async (credentials: SignupCredentialsType): Promise<AuthResponseType> => {
       const { data } = await api.post('/auth/register', credentials);
-      console.log('Signup data', data);
       return data;
     },
     onSuccess: (data) => {
       setUser(data?.data);
       ToastService.showToast('success', data?.message);
+      router.replace('/screens/auth/Signin');
     },
     onError: (error) => {
       const errData = getError(error);
@@ -97,6 +98,7 @@ export const useSendEmailOtp = () => {
 };
 
 export const useVerifyEmailOtp = () => {
+  const router = useRouter();
   return useMutation<AuthResponseType, unknown, { email: string; otp: string }>({
     mutationFn: async ({ email, otp }) => {
       const { data } = await api.post('/auth/verify-email', { email, otp });
