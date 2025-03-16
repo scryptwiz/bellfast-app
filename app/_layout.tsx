@@ -36,20 +36,18 @@ export default function Layout() {
 
 // Move everything inside AppContent to ensure React Query is available
 function AppContent() {
-  const { isLoading } = useValidateToken();
-  const [splashAnimationFinished, setSplashAnimationFinished] = useState(false);
-
+  const { isLoading } = useValidateToken(); // API loading status
+  const [splashComplete, setSplashComplete] = useState(false);
   const [fontsLoaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  // Show splash screen until everything is ready
-  if (!fontsLoaded || !splashAnimationFinished || isLoading) {
+  // Hold screen until both are ready
+  if (!fontsLoaded || !splashComplete) {
     return (
       <AnimatedSplashScreen
-        onAnimationFinish={(isCancelled) => {
-          if (!isCancelled) setSplashAnimationFinished(true);
-        }}
+        apiLoading={isLoading}
+        onSplashComplete={() => setSplashComplete(true)}
       />
     );
   }
