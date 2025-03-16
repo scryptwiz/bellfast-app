@@ -13,7 +13,7 @@ import { storage } from '~/lib/storage/mmkv';
 export const useLogin = () => {
   const router = useRouter();
 
-  const { setUser } = useUserStore();
+  const { setUser, clearUser } = useUserStore();
   const queryClient = useQueryClient();
 
   return useMutation<AuthResponseType, unknown, LoginCredentialsType>({
@@ -30,9 +30,9 @@ export const useLogin = () => {
       ToastService.showToast('success', 'Login successful');
       router.replace('/screens/home');
     },
-    onError: async (error) => {
-      const errData = getError(error);
-      ToastService.showToast('error', errData?.message);
+    onError: async () => {
+      clearUser();
+      storage.delete(AUTH_TOKEN_KEY);
     },
   });
 };
