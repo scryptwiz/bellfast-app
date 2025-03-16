@@ -13,7 +13,7 @@ import {
 import { OtpInput } from 'react-native-otp-entry';
 import { COLOR } from '~/constants/Colors';
 import { Dimensions } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Button } from '~/components/Button';
 import { ChevronLeft, MailCheck, TimerReset } from 'lucide-react-native';
 import { validateEmail, validateFields } from '~/utils/Validation.utils';
@@ -23,12 +23,15 @@ import { getError } from '~/utils/functions/response.utils';
 const { width } = Dimensions.get('window');
 
 const VerifyToken = () => {
+  const params = useLocalSearchParams();
+  const emailParam = Array.isArray(params?.email) ? params.email[0] : params?.email || '';
+
   const [otp, setOtp] = useState('');
-  const [email, setEmail] = useState('');
   const [countdown, setCountdown] = useState(60);
   const [emailError, setEmailError] = useState('');
-  const [step, setStep] = useState<'email' | 'otp'>('email');
+  const [email, setEmail] = useState(emailParam);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
+  const [step, setStep] = useState<'email' | 'otp'>(params?.email ? 'otp' : 'email');
 
   const { mutate: sendEmailOtpMutation, isPending: sendingEmailOtp } = useSendEmailOtp();
   const { mutate: verifyEmailOtpMutation, isPending: verifyingEmailOtp } = useVerifyEmailOtp();

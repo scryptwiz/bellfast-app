@@ -10,7 +10,7 @@ export const ToastService = {
   setShowToastFunction: (fn: (params: ToastParams) => void) => {
     showToastImpl = fn;
   },
-  showToast: (type: string, text: string, duration = 3000) => {
+  showToast: (type: string, text: string, duration = 5000) => {
     if (showToastImpl) {
       showToastImpl({ type, text, duration });
     } else {

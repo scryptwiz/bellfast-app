@@ -18,7 +18,7 @@ export default function Layout() {
 
   useEffect(() => {
     const show = (params: { type: string; text: string; duration?: number }) =>
-      toastRef.current?.show({ ...params, duration: params.duration ?? 3000 });
+      toastRef.current?.show({ ...params, duration: params.duration ?? 5000 });
     ToastService.setShowToastFunction(show);
 
     return () => ToastService.setShowToastFunction(() => {}); // cleanup

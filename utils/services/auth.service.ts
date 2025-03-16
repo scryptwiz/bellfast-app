@@ -78,12 +78,14 @@ export const useSignupUser = () => {
     onSuccess: (data) => {
       setUser(data?.data);
       ToastService.showToast('success', data?.message);
-      router.replace('/screens/auth/Verifytoken');
+      router.replace({
+        pathname: '/screens/auth/Verifytoken',
+        params: { email: data?.data?.email },
+      });
     },
     onError: (error) => {
       const errData = getError(error);
       ToastService.showToast('error', errData?.message);
-      console.error('Signup Error:', errData);
     },
   });
 };

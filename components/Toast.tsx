@@ -142,6 +142,9 @@ const styles = StyleSheet.create({
   toastText: {
     marginLeft: 14,
     fontSize: 16,
+    flex: 1,
+    flexShrink: 1,
+    flexWrap: 'wrap',
   },
   toastIcon: {
     width: 30,
