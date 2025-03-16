@@ -30,9 +30,11 @@ export const useLogin = () => {
       ToastService.showToast('success', 'Login successful');
       router.replace('/screens/home');
     },
-    onError: async () => {
+    onError: async (error) => {
       clearUser();
       storage.delete(AUTH_TOKEN_KEY);
+      const errData = getError(error);
+      ToastService.showToast('error', errData?.message);
     },
   });
 };
@@ -56,9 +58,8 @@ export const useValidateToken = () => {
     }
 
     if (isError) {
-      const errData = getError(error);
-      ToastService.showToast('error', errData?.message);
       clearUser();
+      storage.delete(AUTH_TOKEN_KEY);
     }
   }, [data, error, isError, setUser, clearUser]);
 
