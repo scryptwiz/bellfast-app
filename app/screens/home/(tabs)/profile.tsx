@@ -42,7 +42,7 @@ const Profile = () => {
     <ScrollView className="flex-1 bg-white px-5 py-6">
       {/* Header */}
       <View className="mb-6 flex-row items-center justify-between">
-        <Text className="text-2xl font-bold text-s1">Profile</Text>
+        <Text className="text-xl font-bold text-s1">Profile</Text>
         <TouchableOpacity
           onPress={() => router.push('/screens/home/profile')}
           className="flex-row items-center gap-2 rounded-full bg-[#f6f4ff] px-4 py-2">
@@ -58,12 +58,12 @@ const Profile = () => {
           className="mb-3 h-20 w-20 rounded-full bg-gray-100"
         />
         <Text className="text-lg font-semibold text-s1">{fullName}</Text>
-        <Text className="text-s3 text-sm">{email}</Text>
+        <Text className="text-sm text-s3">{email}</Text>
 
         {/* KYC Warning */}
         {isKycUnverified && (
           <TouchableOpacity
-            onPress={() => router.push('/screens/home/profile')}
+            onPress={() => router.push('/screens/auth/CompleteKyc')}
             className="mt-2 rounded-full bg-red-50 px-3 py-1">
             <Text className="text-xs font-medium text-red-500">
               ⚠️ Profile incomplete — tap to verify your KYC

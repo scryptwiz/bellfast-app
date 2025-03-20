@@ -9,19 +9,22 @@ export default function Index() {
   const { user } = useUserStore();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const hasSignedIn = storage.getString('hasEverSignedIn');
-      if (!hasSignedIn) {
-        storage.set('hasEverSignedIn', 'true');
-        router.replace('/screens/onboarding/OnboardingScreen');
-      } else if (user) {
-        router.replace('/screens/home');
-      } else {
-        router.replace('/screens/auth/Signin');
-      }
-    }, 0);
+    const runNavigation = async () => {
+      await InteractionManager.runAfterInteractions(() => {
+        const hasSignedIn = storage.getString('hasEverSignedIn');
 
-    return () => clearTimeout(timeout);
+        if (!hasSignedIn) {
+          storage.set('hasEverSignedIn', 'true');
+          router.replace('/screens/onboarding/OnboardingScreen');
+        } else if (user) {
+          router.replace('/screens/home');
+        } else {
+          router.replace('/screens/auth/Signin');
+        }
+      });
+    };
+
+    runNavigation();
   }, [user]);
 
   return null;
